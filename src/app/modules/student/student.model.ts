@@ -1,27 +1,48 @@
 import { Schema, model } from 'mongoose'
+import validator from 'validator'
 import { Guardian, LocalGuardian, Student, Username } from './student.interface'
 
 const userNameSchema = new Schema<Username>({
   firstName: {
     type: String,
+    trim: true,
     required: [true, 'First name required'],
+    maxlength: [20, 'Max length is 20'],
+    validate: {
+      validator: function (value: string) {
+        const firstNameStr =
+          value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+
+        return firstNameStr === value
+      },
+      message: '{VALUE} is not capitalize format',
+    },
   },
   middleName: {
     type: String,
+    trim: true, // remove extra space
   },
   lastName: {
     type: String,
     required: [true, 'Last name required'],
+    trim: true,
+    validate: {
+      validator: (value: string) => validator.isAlpha(value),
+      message: '{VALUE} is not valid',
+    },
   },
 })
+
 const guardianSchema = new Schema<Guardian>({
   fatherName: {
     type: String,
     required: true,
+    trim: true,
   },
   fatherContact: {
     type: String,
     required: true,
+    trim: true,
   },
   fatherOccupation: {
     type: String,
@@ -30,6 +51,7 @@ const guardianSchema = new Schema<Guardian>({
   motherName: {
     type: String,
     required: true,
+    trim: true,
   },
   motherContact: {
     type: String,
@@ -40,10 +62,12 @@ const guardianSchema = new Schema<Guardian>({
     required: true,
   },
 })
+
 const localGuardianSchema = new Schema<LocalGuardian>({
   name: {
     type: String,
     required: true,
+    trim: true,
   },
   occupation: {
     type: String,
@@ -70,7 +94,15 @@ const studentSchema = new Schema<Student>({
     required: [true, 'gender is required'],
   },
   dateOfBirth: { type: String },
-  email: { type: String, required: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    // validate: {
+    //   validator: (value: string) => validator.isEmail(value),
+    //   message: '{VALUE} is not a valid email',
+    // },
+  },
   contactNo: { type: String, required: true },
   emergencyContact: { type: String, required: true },
   bloodGroup: {
