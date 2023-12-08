@@ -1,5 +1,7 @@
+import bcrypt from 'bcrypt'
 import { Schema, model } from 'mongoose'
 import validator from 'validator'
+import config from '../../config'
 import {
   StudentModel,
   TGuardian,
@@ -87,6 +89,12 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
+  password: {
+    type: String,
+    required: [true, 'Password is required'],
+    unique: true,
+    maxlength: [20, 'Password cannot be more than 20 characters'],
+  },
   name: {
     type: userNameSchema,
     required: true,
@@ -141,6 +149,23 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
   return existingUser
 }
+
+// pre save middleware / hook - we will save data
+studentSchema.pre('save', async function (next) {
+  // console.log(this, 'pre hook: we will save data')
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round),
+  )
+  next()
+})
+
+// post save middleware / hook - we saved data
+studentSchema.post('save', function () {
+  //   console.log(this, 'post hook: we saved data')
+})
 
 // creating a custom instance method
 // studentSchema.methods.isUserExists = async function (id: string) {
