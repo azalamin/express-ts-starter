@@ -111,7 +111,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   email: {
     type: String,
     required: true,
-    unique: true,
     // validate: {
     //   validator: (value: string) => validator.isEmail(value),
     //   message: '{VALUE} is not a valid email',
@@ -141,6 +140,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', 'blocked'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // creating a custom static method
@@ -152,7 +155,6 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
 // pre save middleware / hook - we will save data
 studentSchema.pre('save', async function (next) {
-  // console.log(this, 'pre hook: we will save data')
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this
   user.password = await bcrypt.hash(
@@ -163,8 +165,25 @@ studentSchema.pre('save', async function (next) {
 })
 
 // post save middleware / hook - we saved data
-studentSchema.post('save', function () {
-  //   console.log(this, 'post hook: we saved data')
+studentSchema.post('save', function (doc, next) {
+  doc.password = ''
+  next()
+})
+
+// pre find quarry middleware / hook
+studentSchema.pre('find', async function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
+
+studentSchema.pre('findOne', async function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
+
+studentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
+  next()
 })
 
 // creating a custom instance method
