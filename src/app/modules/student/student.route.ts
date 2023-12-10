@@ -13,4 +13,6 @@ router.get('/:studentId', StudentControllers.getSingleStudent)
 
 router.delete('/:studentId', StudentControllers.deleteSingleStudent)
 
+router.patch('/:studentId', StudentControllers.updateSingleStudent)
+
 export const StudentRoutes = router
