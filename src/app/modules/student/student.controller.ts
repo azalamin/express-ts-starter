@@ -94,6 +94,7 @@ const updateSingleStudent = async (req: Request, res: Response) => {
   try {
     const { studentId } = req.params
     const updates = req.body
+
     const result = await StudentServices.updateSingleStudentFromDB(
       studentId,
       updates,
