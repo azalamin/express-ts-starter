@@ -13,7 +13,7 @@ const globalErrorHandler = (
 ) => {
   const message = error.message || 'Something went wrong!'
 
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+  return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
     success: false,
     message,
     err: error,

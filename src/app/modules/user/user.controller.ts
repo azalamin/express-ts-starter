@@ -15,7 +15,7 @@ const createStudent = async (
 
     const result = await UserServices.createStudentIntoDB(password, studentData)
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Student is created successfully',
       data: result,
