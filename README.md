@@ -1,4 +1,4 @@
-# Mongoose
+# Mongoose Basic to Advanced
 
 ### Mongoose is a powerful data modeling library for MongoDB
 
@@ -93,8 +93,8 @@ npm install --save-dev prettier
 2.  you will need to create a file called `.prettierrc.json` in the project’s root directory, then paste some code to it
     ```json
     {
-    	"semi": true,
-    	"singleQuote": true
+      "semi": true,
+      "singleQuote": true
     }
     ```
 3.  add some script to `package.json`
@@ -110,8 +110,8 @@ npm install --save-dev prettier
 
 ```json
 {
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }
 ```
 
