@@ -3,7 +3,6 @@ import express, { Application, Request, Response } from 'express'
 import { StudentRoutes } from './app/modules/student/student.route'
 
 const app: Application = express()
-// const port = 5000;
 
 // parser
 app.use(express.json())
