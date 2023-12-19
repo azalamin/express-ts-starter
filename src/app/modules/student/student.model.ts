@@ -87,10 +87,10 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>(
   {
-    id: { type: String, required: true, unique: true },
+    id: { type: String, required: [true, 'Student ID required'], unique: true },
     user: {
       type: Schema.Types.ObjectId,
-      required: true,
+      required: [true, 'User id required'],
     },
     name: {
       type: userNameSchema,
@@ -107,6 +107,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     dateOfBirth: { type: Date },
     email: {
       type: String,
+      unique: true,
       required: true,
       validate: {
         validator: (value: string) => validator.isEmail(value),
