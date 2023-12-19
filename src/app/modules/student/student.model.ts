@@ -132,9 +132,9 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     profileImg: {
       type: String,
     },
-    academicDepartment: {
-      type: Schema.Types.ObjectId,
-    },
+    // academicDepartment: {
+    //   type: Schema.Types.ObjectId,
+    // },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -147,28 +147,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     timestamps: true,
   },
 )
-
-// creating a custom static method
-studentSchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Student.findOne({ id })
-
-  return existingUser
-}
-
-// studentSchema.pre('save', async function (next) {
-//   // eslint-disable-next-line @typescript-eslint/no-this-alias
-//   const user = this
-//   user.password = await bcrypt.hash(
-//     user.password,
-//     Number(config.bcrypt_salt_round),
-//   )
-//   next()
-// })
-
-// studentSchema.post('save', function (doc, next) {
-//   doc.password = ''
-//   next()
-// })
 
 // pre find quarry middleware / hook
 studentSchema.pre('find', async function (next) {
@@ -189,12 +167,5 @@ studentSchema.pre('aggregate', async function (next) {
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`
 })
-
-// creating a custom instance method
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const exitingUser = await Student.findOne({ id })
-
-//   return exitingUser
-// }
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema)
