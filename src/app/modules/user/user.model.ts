@@ -3,36 +3,39 @@ import { Schema, model } from 'mongoose'
 import config from '../../config'
 import { TUser } from './user.interface'
 
-const userSchema = new Schema<TUser>({
-  id: {
-    type: String,
-    unique: true,
-    required: true,
+const userSchema = new Schema<TUser>(
+  {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    needsPasswordChange: {
+      type: Boolean,
+      default: true,
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'student', 'faculty'],
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ['in-progress', 'blocked'],
+      required: true,
+      default: 'in-progress',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  needsPasswordChange: {
-    type: Boolean,
-    default: true,
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'student', 'faculty'],
-    required: true,
-  },
-  status: {
-    type: String,
-    enum: ['in-progress', 'blocked'],
-    required: true,
-    default: 'in-progress',
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-})
+  { timestamps: true },
+)
 
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -49,4 +52,4 @@ userSchema.post('save', function (doc, next) {
   next()
 })
 
-export const User = model('User', userSchema)
+export const User = model<TUser>('User', userSchema)
